@@ -115,6 +115,7 @@ import { ref } from 'vue'
 import { supabase } from '../lib/supabase'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user'
+import { getRedirectUrl } from '../lib/supabase'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -149,7 +150,7 @@ const signInWithGoogle = async () => {
     const { data, error: signInError } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/`
+        redirectTo: `${getRedirectUrl()}/`
       }
     })
 
@@ -166,7 +167,7 @@ const signInWithGithub = async () => {
     const { data, error: signInError } = await supabase.auth.signInWithOAuth({
       provider: 'github',
       options: {
-        redirectTo: `${window.location.origin}/`
+        redirectTo: `${getRedirectUrl()}/`
       }
     })
 

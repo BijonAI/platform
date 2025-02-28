@@ -105,6 +105,7 @@ import { ref } from 'vue'
 import { supabase } from '../lib/supabase'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user'
+import { getRedirectUrl } from '../lib/supabase'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -135,7 +136,7 @@ const handleRegister = async () => {
       email: email.value,
       password: password.value,
       options: {
-        emailRedirectTo: `${window.location.origin}/login`
+        emailRedirectTo: `${getRedirectUrl()}/login`
       }
     })
 
