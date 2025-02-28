@@ -9,10 +9,12 @@ export const useUserStore = defineStore('user', () => {
 
   async function loadUser() {
     try {
+      loading.value = true
       const { data: { user: currentUser } } = await supabase.auth.getUser()
       user.value = currentUser
     } catch (error) {
       console.error('Error loading user:', error)
+      user.value = null
     } finally {
       loading.value = false
     }
@@ -26,6 +28,16 @@ export const useUserStore = defineStore('user', () => {
       console.error('Error signing out:', error)
     }
   }
+
+  // 设置认证状态监听器
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (session?.user) {
+      user.value = session.user
+    } else {
+      user.value = null
+    }
+    loading.value = false
+  })
 
   return {
     user,

@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col h-full border-r border-gray-300 bg-white transition-all duration-300
-              dark:bg-gray-800 dark:border-gray-700"
-    :class="[isOpen ? 'w-64' : 'w-16', 'relative']">
+  <div class="flex flex-col h-screen border-r border-gray-300 bg-white transition-all duration-300
+              dark:bg-gray-800 dark:border-gray-700 shadow-lg"
+    :class="[isOpen ? 'w-64' : 'w-16']">
     <!-- 汉堡菜单按钮 -->
     <button @click="toggleSidebar" 
             class="absolute top-4 left-4 z-50 p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700">
@@ -10,56 +10,62 @@
     </button>
 
     <!-- 侧边栏内容 -->
-    <div class="flex flex-col space-y-2 mt-16">
-      <router-link v-for="item in menuItems" 
-                   :key="item.path" 
-                   :to="item.path"
-                   class="flex items-center justify-center m-3 p-2 rounded-lg transition-colors
-                          text-gray-700 dark:text-gray-200
-                          hover:bg-gray-100 dark:hover:bg-gray-700"
-                   :class="{ 'justify-center': !isOpen }">
-        <font-awesome-icon :icon="item.icon" size="lg" />
-        <span v-if="isOpen" 
-              class="ml-3 transition-opacity duration-200"
-              :class="{ 'opacity-0': !isOpen, 'opacity-100': isOpen }">
-          {{ item.name }}
-        </span>
-      </router-link>
+    <div class="flex flex-col space-y-2 mt-16 h-full">
+      <!-- 主要导航菜单 -->
+      <div class="flex-1">
+        <router-link v-for="item in menuItems" 
+                     :key="item.path" 
+                     :to="item.path"
+                     class="flex items-center justify-center m-3 p-2 rounded-lg transition-colors
+                            text-gray-700 dark:text-gray-200
+                            hover:bg-gray-100 dark:hover:bg-gray-700"
+                     :class="{ 'justify-center': !isOpen }">
+          <font-awesome-icon :icon="item.icon" size="lg" />
+          <span v-if="isOpen" 
+                class="ml-3 transition-opacity duration-200"
+                :class="{ 'opacity-0': !isOpen, 'opacity-100': isOpen }">
+            {{ item.name }}
+          </span>
+        </router-link>
+      </div>
 
-      <!-- 主题切换按钮 -->
-      <button @click="themeSwitcher.toggleTheme"
-              class="flex items-center justify-center m-3 p-2 rounded-lg transition-colors
-                     text-gray-700 dark:text-gray-200
-                     hover:bg-gray-100 dark:hover:bg-gray-700"
-              :class="{ 'justify-center': !isOpen }">
-        <font-awesome-icon :icon="isDark ? 'sun' : 'moon'" size="lg" />
-        <span v-if="isOpen" 
-              class="ml-3 transition-opacity duration-200"
-              :class="{ 'opacity-0': !isOpen, 'opacity-100': isOpen }">
-          {{ isDark ? 'Light Mode' : 'Dark Mode' }}
-        </span>
-      </button>
+      <!-- 底部操作按钮组 -->
+      <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+        <!-- 主题切换按钮 -->
+        <button @click="themeSwitcher.toggleTheme"
+                class="flex items-center justify-center w-full mb-3 p-2 rounded-lg transition-colors
+                       text-gray-700 dark:text-gray-200
+                       hover:bg-gray-100 dark:hover:bg-gray-700"
+                :class="{ 'justify-center': !isOpen }">
+          <font-awesome-icon :icon="isDark ? 'sun' : 'moon'" size="lg" />
+          <span v-if="isOpen" 
+                class="ml-3 transition-opacity duration-200"
+                :class="{ 'opacity-0': !isOpen, 'opacity-100': isOpen }">
+            {{ isDark ? 'Light Mode' : 'Dark Mode' }}
+          </span>
+        </button>
 
-      <!-- 登出按钮 -->
-      <button @click="handleSignOut"
-              class="flex items-center justify-center m-3 p-2 rounded-lg transition-colors
-                     text-red-600 dark:text-red-400
-                     hover:bg-red-100 dark:hover:bg-red-900/30"
-              :class="{ 'justify-center': !isOpen }">
-        <font-awesome-icon icon="right-from-bracket" size="lg" />
-        <span v-if="isOpen" 
-              class="ml-3 transition-opacity duration-200"
-              :class="{ 'opacity-0': !isOpen, 'opacity-100': isOpen }">
-          Sign Out
-        </span>
-      </button>
+        <!-- 登出按钮 -->
+        <button @click="handleSignOut"
+                class="flex items-center justify-center w-full p-2 rounded-lg transition-colors
+                       text-red-600 dark:text-red-400
+                       hover:bg-red-100 dark:hover:bg-red-900/30"
+                :class="{ 'justify-center': !isOpen }">
+          <font-awesome-icon icon="right-from-bracket" size="lg" />
+          <span v-if="isOpen" 
+                class="ml-3 transition-opacity duration-200"
+                :class="{ 'opacity-0': !isOpen, 'opacity-100': isOpen }">
+            Sign Out
+          </span>
+        </button>
+      </div>
     </div>
   </div>
 
   <!-- 遮罩层 -->
   <div v-if="isOpen" 
        @click="toggleSidebar"
-       class="fixed inset-0 bg-black/50 dark:bg-black/70 z-40 md:hidden">
+       class="fixed inset-0 bg-black/50 dark:bg-black/70 z-20 md:hidden">
   </div>
 </template>
 
@@ -78,7 +84,8 @@ import {
   faSun,
   faMoon,
   faRightFromBracket,
-  faCube
+  faCube,
+  faDollarSign
 } from '@fortawesome/free-solid-svg-icons'
 import { useUserStore } from '../stores/user'
 import { useRouter } from 'vue-router'
@@ -96,7 +103,8 @@ library.add(
   faSun, 
   faMoon,
   faRightFromBracket,
-  faCube
+  faCube,
+  faDollarSign
 )
 
 const isOpen = ref(false)
@@ -111,6 +119,7 @@ const isDark = computed(() => themeSwitcher.theme.value === 'dark')
 const menuItems = [
   { name: 'Home', icon: 'home', path: '/' },
   { name: 'Apps', icon: 'cube', path: '/apps' },
+  { name: 'Pricing', icon: 'dollar-sign', path: '/pricing' },
   { name: 'Analytics', icon: 'chart-line', path: '/analytics' },
   { name: 'Messages', icon: 'envelope', path: '/messages' },
   { name: 'Settings', icon: 'cog', path: '/settings' },

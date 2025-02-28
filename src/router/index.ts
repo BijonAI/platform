@@ -27,6 +27,16 @@ const router = createRouter({
       component: () => import('../views/Apps.vue'),
       meta: { requiresAuth: true }
     },
+    {
+      path: '/register',
+      name: 'Register',
+      component: () => import('../views/Register.vue')
+    },
+    {
+      path: '/pricing',
+      name: 'Pricing',
+      component: () => import('../views/Pricing.vue')
+    },
     // ... 其他路由
   ]
 })
@@ -36,9 +46,9 @@ router.beforeEach(async (to, from, next) => {
   const { data: { session } } = await supabase.auth.getSession()
   
   if (to.meta.requiresAuth && !session) {
-    next('/login')
-  } else if (to.path === '/login' && session) {
-    next('/')
+    next({ path: '/login', replace: true })
+  } else if ((to.path === '/login' || to.path === '/register') && session) {
+    next({ path: '/', replace: true })
   } else {
     next()
   }

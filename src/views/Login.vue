@@ -98,6 +98,14 @@
       <div v-if="error" class="mt-4 text-red-600 dark:text-red-400 text-center text-sm">
         {{ error }}
       </div>
+
+      <!-- 在社交登录按钮下方添加 -->
+      <div class="mt-4 text-center">
+        <router-link to="/register"
+                     class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-500">
+          Don't have an account? Sign up
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -106,8 +114,10 @@
 import { ref } from 'vue'
 import { supabase } from '../lib/supabase'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '../stores/user'
 
 const router = useRouter()
+const userStore = useUserStore()
 const email = ref('')
 const password = ref('')
 const error = ref('')
@@ -116,14 +126,17 @@ const error = ref('')
 const handleLogin = async () => {
   try {
     error.value = ''
-    const { error: signInError } = await supabase.auth.signInWithPassword({
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({
       email: email.value,
       password: password.value,
     })
-
+    
     if (signInError) throw signInError
-
-    router.push('/')
+    
+    if (data.session) {
+      await userStore.loadUser()
+      await router.push('/')
+    }
   } catch (e: any) {
     error.value = e.message
   }
@@ -133,8 +146,11 @@ const handleLogin = async () => {
 const signInWithGoogle = async () => {
   try {
     error.value = ''
-    const { error: signInError } = await supabase.auth.signInWithOAuth({
+    const { data, error: signInError } = await supabase.auth.signInWithOAuth({
       provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/`
+      }
     })
 
     if (signInError) throw signInError
@@ -147,8 +163,11 @@ const signInWithGoogle = async () => {
 const signInWithGithub = async () => {
   try {
     error.value = ''
-    const { error: signInError } = await supabase.auth.signInWithOAuth({
+    const { data, error: signInError } = await supabase.auth.signInWithOAuth({
       provider: 'github',
+      options: {
+        redirectTo: `${window.location.origin}/`
+      }
     })
 
     if (signInError) throw signInError
@@ -158,9 +177,10 @@ const signInWithGithub = async () => {
 }
 
 // 监听认证状态变化
-supabase.auth.onAuthStateChange((event, session) => {
+supabase.auth.onAuthStateChange(async (event, session) => {
   if (event === 'SIGNED_IN' && session) {
-    router.push('/')
+    await userStore.loadUser()
+    await router.push({ path: '/', replace: true })
   }
 })
 </script>

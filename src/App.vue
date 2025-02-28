@@ -1,8 +1,12 @@
 <template>
-  <div class="h-screen w-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+  <div class="h-screen w-screen bg-gray-50 dark:bg-gray-900">
     <div class="flex flex-row h-full w-full">
-      <Sidebar />
-      <div class="flex-1 p-4 md:p-6">
+      <!-- 固定侧边栏 -->
+      <div class="fixed inset-y-0 left-0 z-30">
+        <Sidebar />
+      </div>
+      <!-- 主内容区域，添加左边距以避免被侧边栏遮挡 -->
+      <div class="flex-1 ml-16 md:ml-16 p-4 md:p-6">
         <router-view />
       </div>
     </div>
