@@ -21,6 +21,12 @@ const router = createRouter({
     //   component: () => import('../views/Profile.vue'),
     //   meta: { requiresAuth: true }
     // },
+    {
+      path: '/apps',
+      name: 'Apps',
+      component: () => import('../views/Apps.vue'),
+      meta: { requiresAuth: true }
+    },
     // ... 其他路由
   ]
 })

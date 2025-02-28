@@ -77,7 +77,8 @@ import {
   faXmark,
   faSun,
   faMoon,
-  faRightFromBracket
+  faRightFromBracket,
+  faCube
 } from '@fortawesome/free-solid-svg-icons'
 import { useUserStore } from '../stores/user'
 import { useRouter } from 'vue-router'
@@ -94,7 +95,8 @@ library.add(
   faXmark, 
   faSun, 
   faMoon,
-  faRightFromBracket
+  faRightFromBracket,
+  faCube
 )
 
 const isOpen = ref(false)
@@ -108,7 +110,7 @@ const isDark = computed(() => themeSwitcher.theme.value === 'dark')
 // 菜单项配置
 const menuItems = [
   { name: 'Home', icon: 'home', path: '/' },
-  { name: 'Profile', icon: 'user', path: '/profile' },
+  { name: 'Apps', icon: 'cube', path: '/apps' },
   { name: 'Analytics', icon: 'chart-line', path: '/analytics' },
   { name: 'Messages', icon: 'envelope', path: '/messages' },
   { name: 'Settings', icon: 'cog', path: '/settings' },
