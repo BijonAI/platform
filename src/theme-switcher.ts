@@ -45,6 +45,4 @@ export const createThemeSwitcher = () => {
 
 const themeSwitcher = createThemeSwitcher()
 
-console.log(themeSwitcher)
-
 export const useThemeSwitcher = () => themeSwitcher
