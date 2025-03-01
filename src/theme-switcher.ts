@@ -1,11 +1,6 @@
-import { ref, watch, type Ref } from 'vue'
+import { ref, watch } from 'vue'
 
-export interface ThemeSwitcher {
-  theme: Ref<string>;
-  toggleTheme: () => void;
-}
-
-export const useThemeSwitcher = (): ThemeSwitcher => {
+export const createThemeSwitcher = () => {
   // 从本地存储或系统偏好获取初始主题
   const getInitialTheme = (): string => {
     const savedTheme = localStorage.getItem('theme')
@@ -43,6 +38,13 @@ export const useThemeSwitcher = (): ThemeSwitcher => {
 
   return {
     theme,
-    toggleTheme
+    toggleTheme,
+    applyTheme
   }
 }
+
+const themeSwitcher = createThemeSwitcher()
+
+console.log(themeSwitcher)
+
+export const useThemeSwitcher = () => themeSwitcher
