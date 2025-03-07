@@ -1,19 +1,19 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import { supabase } from '../lib/supabase'
+import { createRouter, createWebHistory } from "vue-router";
+import { supabase } from "../lib/supabase";
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: '/login',
-      name: 'Login',
-      component: () => import('../views/Login.vue')
+      path: "/login",
+      name: "Login",
+      component: () => import("../views/Login.vue"),
     },
     {
-      path: '/',
-      name: 'Home',
-      component: () => import('../views/Main.vue'),
-      meta: { requiresAuth: true }
+      path: "/",
+      name: "Home",
+      component: () => import("../views/Main.vue"),
+      meta: { requiresAuth: true },
     },
     // {
     //   path: '/profile',
@@ -22,36 +22,46 @@ const router = createRouter({
     //   meta: { requiresAuth: true }
     // },
     {
-      path: '/apps',
-      name: 'Apps',
-      component: () => import('../views/Apps.vue'),
-      meta: { requiresAuth: true }
+      path: "/apps",
+      name: "Apps",
+      component: () => import("../views/Apps.vue"),
+      meta: { requiresAuth: true },
     },
     {
-      path: '/register',
-      name: 'Register',
-      component: () => import('../views/Register.vue')
+      path: "/register",
+      name: "Register",
+      component: () => import("../views/Register.vue"),
     },
     {
-      path: '/pricing',
-      name: 'Pricing',
-      component: async () => await import('../views/Pricing.vue')
+      path: "/pricing",
+      name: "Pricing",
+      component: async () => await import("../views/Pricing.vue"),
     },
     // ... 其他路由
-  ]
-})
+  ],
+});
 
 // 路由守卫
 router.beforeEach(async (to, from, next) => {
-  const { data: { session } } = await supabase.auth.getSession()
-  
-  if (to.meta.requiresAuth && !session) {
-    next({ path: '/login', replace: true })
-  } else if ((to.path === '/login' || to.path === '/register') && session) {
-    next({ path: '/', replace: true })
-  } else {
-    next()
-  }
-})
+  const { data: { session } } = await supabase.auth.getSession();
 
-export default router
+  if (to.meta.requiresAuth && !session) {
+    next({ path: "/login", replace: true });
+  } else if ((to.path === "/login" || to.path === "/register") && session) {
+    const auth = await supabase.auth.getUser();
+    await fetch("https://gppcjiwuyqyndxmzkfiw.supabase.co/functions/v1/after-auth", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        uid: auth.data.user?.id,
+      }),
+    });
+    next({ path: "/", replace: true });
+  } else {
+    next();
+  }
+});
+
+export default router;

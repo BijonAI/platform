@@ -280,8 +280,6 @@ const balanceSearched = await supabase
   .select('uid, balance')
   .eq('uid', auth.data.user?.id)
 
-console.log(balanceSearched.data)
-
 const balance = balanceSearched.data?.[0]?.balance || 0
 
 const predefinedAmounts = [10, 50, 100]
