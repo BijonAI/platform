@@ -8,7 +8,7 @@
           <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Current Balance</h3>
           <div class="mt-2 flex items-baseline">
             <span class="text-4xl font-extrabold text-gray-900 dark:text-white">
-              ${{ balance.toFixed(2) }}
+              ${{ (await balance).toFixed(2) }}
             </span>
             <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">USD</span>
           </div>
@@ -235,6 +235,7 @@ import {
   faChevronUp, 
   faChevronDown 
 } from '@fortawesome/free-solid-svg-icons'
+import { supabase } from '../lib/supabase'
 
 library.add(faCheck, faChevronUp, faChevronDown)
 
@@ -274,7 +275,14 @@ const selectPlan = (plan: 'free' | 'pro' | 'enterprise') => {
 }
 
 // 余额相关
-const balance = ref(0)
+const balance = computed(async () => {
+  const auth = await supabase.auth.getUser()
+  const balance = await supabase
+    .from('billing')
+    .select('uid, balance')
+    .eq('uid', auth.data.user?.id)
+  return balance.data?.[0]?.balance || 0
+})
 const predefinedAmounts = [10, 50, 100]
 const selectedAmount = ref(50)
 const customAmount = ref('')
