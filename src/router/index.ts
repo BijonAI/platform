@@ -48,16 +48,6 @@ router.beforeEach(async (to, from, next) => {
   if (to.meta.requiresAuth && !session) {
     next({ path: "/login", replace: true });
   } else if ((to.path === "/login" || to.path === "/register") && session) {
-    const auth = await supabase.auth.getUser();
-    await fetch("https://gppcjiwuyqyndxmzkfiw.supabase.co/functions/v1/after-auth", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        uid: auth.data.user?.id,
-      }),
-    });
     next({ path: "/", replace: true });
   } else {
     next();
