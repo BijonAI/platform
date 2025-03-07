@@ -7,7 +7,9 @@
       </div>
       <!-- 主内容区域，添加左边距以避免被侧边栏遮挡 -->
       <div class="flex-1 ml-16 md:ml-16 p-4 md:p-6">
-        <router-view />
+        <Suspense>
+          <router-view />
+        </Suspense>
       </div>
     </div>
   </div>

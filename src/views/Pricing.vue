@@ -8,7 +8,7 @@
           <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Current Balance</h3>
           <div class="mt-2 flex items-baseline">
             <span class="text-4xl font-extrabold text-gray-900 dark:text-white">
-              ${{ (await balance).toFixed(2) }}
+              ${{ balance.toFixed(2) }}
             </span>
             <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">USD</span>
           </div>
@@ -274,15 +274,14 @@ const selectPlan = (plan: 'free' | 'pro' | 'enterprise') => {
   alert(`You selected the ${plan} plan. Payment functionality coming soon!`)
 }
 
-// 余额相关
-const balance = computed(async () => {
-  const auth = await supabase.auth.getUser()
-  const balance = await supabase
-    .from('billing')
-    .select('uid, balance')
-    .eq('uid', auth.data.user?.id)
-  return balance.data?.[0]?.balance || 0
-})
+const auth = await supabase.auth.getUser()
+const balanceSearched = await supabase
+  .from('billing')
+  .select('uid, balance')
+  .eq('uid', auth.data.user?.id)
+
+const balance = balanceSearched.data?.[0]?.balance || 0
+
 const predefinedAmounts = [10, 50, 100]
 const selectedAmount = ref(50)
 const customAmount = ref('')

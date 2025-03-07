@@ -35,7 +35,7 @@ const router = createRouter({
     {
       path: '/pricing',
       name: 'Pricing',
-      component: () => import('../views/Pricing.vue')
+      component: async () => await import('../views/Pricing.vue')
     },
     // ... 其他路由
   ]
