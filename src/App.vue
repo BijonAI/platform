@@ -17,16 +17,16 @@
 
 <script setup lang="ts">
 import Sidebar from './components/Sidebar.vue'
-import { supabase } from './lib/supabase'
+// import { supabase } from './lib/supabase'
 
-const auth = await supabase.auth.getUser();
-await fetch("https://gppcjiwuyqyndxmzkfiw.supabase.co/functions/v1/after-auth", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    uid: auth.data.user?.id,
-  }),
-});
+// const auth = await supabase.auth.getUser();
+// await fetch("https://gppcjiwuyqyndxmzkfiw.supabase.co/functions/v1/after-auth", {
+//   method: "POST",
+//   headers: {
+//     "Content-Type": "application/json",
+//   },
+//   body: JSON.stringify({
+//     uid: auth.data.user?.id,
+//   }),
+// });
 </script>
